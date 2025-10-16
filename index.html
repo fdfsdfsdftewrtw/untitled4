@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Числовые проверки и вычисления</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        input { margin: 5px; width: 60px; }
+        button { margin: 10px 0; }
+        .result { margin-top: 10px; padding: 5px; border: 1px solid #ccc; }
+    </style>
+</head>
+<body>
+    <h2>Проверка числа</h2>
+    <input id="numberInput" placeholder="Число">
+    <button onclick="checkNumber()">Проверить</button>
+    <div id="numberResult" class="result"></div>
+
+    <h2>Квадратное уравнение (a**2 + bx + c = 0)</h2>
+    <input id="aInput" placeholder="a">
+    <input id="bInput" placeholder="b">
+    <input id="cInput" placeholder="c">
+    <button onclick="solveQuadratic()">Решить</button>
+    <div id="quadraticResult" class="result"></div>
+
+    <h2>Проверка треугольника</h2>
+    <input id="side1" placeholder="Сторона 1">
+    <input id="side2" placeholder="Сторона 2">
+    <input id="side3" placeholder="Сторона 3">
+    <button onclick="checkTriangle()">Проверить</button>
+    <div id="triangleResult" class="result"></div>
+
+    <h2>Максимальная сумма пары из 4 чисел</h2>
+    <input id="num1" placeholder="Число 1">
+    <input id="num2" placeholder="Число 2">
+    <input id="num3" placeholder="Число 3">
+    <input id="num4" placeholder="Число 4">
+    <select id="methodSelect">
+        <option value="1">Способ 1: Math.max</option>
+        <option value="2">Способ 2: ручное сравнение</option>
+    </select>
+    <button onclick="maxPairSum()">Вычислить</button>
+    <div id="maxSumResult" class="result"></div>
+
+    <script>
+        function checkNumber() {
+            const num = document.getElementById("numberInput").value;
+            const resultDiv = document.getElementById("numberResult");
+            if (isNaN(num) || num.trim() === "") {
+                resultDiv.textContent = "Вы ввели не число!";
+                return;
+            }
+            const number = Number(num);
+            if (number > 0) resultDiv.textContent = `Введенное число ${number} положительное`;
+            else if (number < 0) resultDiv.textContent = `Введенное число ${number} отрицательное`;
+            else resultDiv.textContent = `Введенное число ${number} равно нулю`;
+        }
+
+        function solveQuadratic() {
+            const a = document.getElementById("aInput").value;
+            const b = document.getElementById("bInput").value;
+            const c = document.getElementById("cInput").value;
+            const resultDiv = document.getElementById("quadraticResult");
+
+            if ([a, b, c].some(x => isNaN(x) || x.trim() === "")) {
+                resultDiv.textContent = "Некорректный ввод коэффициентов!";
+                return;
+            }
+
+            const A = Number(a), B = Number(b), C = Number(c);
+            const D = B * B - 4 * A * C;
+
+            if (D > 0) resultDiv.textContent = "Уравнение имеет два решения";
+            else if (D === 0) resultDiv.textContent = "Уравнение имеет одно решение";
+            else resultDiv.textContent = "Уравнение не имеет действительных решений";
+        }
+
+        function checkTriangle() {
+            const s1 = document.getElementById("side1").value;
+            const s2 = document.getElementById("side2").value;
+            const s3 = document.getElementById("side3").value;
+            const resultDiv = document.getElementById("triangleResult");
+
+            if ([s1, s2, s3].some(x => isNaN(x) || x.trim() === "")) {
+                resultDiv.textContent = "Некорректный ввод сторон!";
+                return;
+            }
+
+            const a1 = Number(s1), a2 = Number(s2), a3 = Number(s3);
+
+            if (a1 + a2 > a3 && a1 + a3 > a2 && a2 + a3 > a1) {
+                resultDiv.textContent = "Эти числа могут быть сторонами треугольника";
+            } else {
+                resultDiv.textContent = "Эти числа не могут быть сторонами треугольника, нарушено неравенство треугольника";
+            }
+        }
+
+        function maxPairSum() {
+            const n1 = document.getElementById("num1").value;
+            const n2 = document.getElementById("num2").value;
+            const n3 = document.getElementById("num3").value;
+            const n4 = document.getElementById("num4").value;
+            const method = document.getElementById("methodSelect").value;
+            const resultDiv = document.getElementById("maxSumResult");
+
+            if ([n1, n2, n3, n4].some(x => isNaN(x) || x.trim() === "")) {
+                resultDiv.textContent = "Некорректный ввод чисел!";
+                return;
+            }
+
+            const N1 = Number(n1), N2 = Number(n2), N3 = Number(n3), N4 = Number(n4);
+            let max;
+
+            switch (method) {
+                case "1":
+                    max = Math.max(
+                        N1 + N2, N1 + N3, N1 + N4,
+                        N2 + N3, N2 + N4,
+                        N3 + N4
+                    );
+                    break;
+                case "2":
+                    max = N1 + N2;
+                    if (N1 + N3 > max) max = N1 + N3;
+                    if (N1 + N4 > max) max = N1 + N4;
+                    if (N2 + N3 > max) max = N2 + N3;
+                    if (N2 + N4 > max) max = N2 + N4;
+                    if (N3 + N4 > max) max = N3 + N4;
+                    break;
+                default:
+                    resultDiv.textContent = "Выбран некорректный метод!";
+                    return;
+            }
+
+            resultDiv.textContent = "Максимальная сумма пары: ${max}";
+        }
+    </script>
+</body>
+</html>
